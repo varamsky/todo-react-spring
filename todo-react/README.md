@@ -3,6 +3,7 @@
 This is a Todo app built with these technologies:
 
 + Frontend:
+	+ Node v14.17.2
 	+ React
     + Tailwind CSS
     + Redux for state management 

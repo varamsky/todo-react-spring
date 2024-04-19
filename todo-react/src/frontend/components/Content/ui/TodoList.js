@@ -9,17 +9,14 @@ import {
   changeSearchText,
 } from "../../../../redux/todo/todoActions.js";
 import DisplayTodoGroup from "./DisplayTodoGroup.js";
+import funcGetFullTextTodo from "../utils/funcGetFullTextTodo.js";
 
 function TodoList() {
   const dispatch = useDispatch();
   const [isCompletedFilter, changeIsCompletedFilter] = useState(false);
   const searchText = useSelector((state) => state.searchText);
-  // const allTodoUrl =
-  //     "http://13.233.99.122/src/backend/utils/todo.php?action=GET_ALL_TODO";
   const allTodoUrl = `${process.env.REACT_APP_SERVER_URL}/${process.env.REACT_APP_GET_ALL_TODOS_ENDPOINT}`;
-  console.log(`allTodoUrl = ${allTodoUrl}`);
-  const fullTextTodoUrl =
-    "http://13.233.99.122/src/backend/utils/todo.php?action=GET_FULLTEXT_TODO";
+  const fullTextTodoUrl = `${process.env.REACT_APP_SERVER_URL}/todos/search?searchText={searchText}`;
   const { allTodoData } = funcGetAllTodo(
     allTodoUrl,
     dispatch,
@@ -43,7 +40,7 @@ function TodoList() {
     fullTextHighCompleted,
     fullTextHighNotCompleted;
 
-    console.log(`allTodoData = ${JSON.stringify(allTodoData)}`);
+  console.log(`allTodoData = ${JSON.stringify(allTodoData)}`);
   completedLowTodo = allTodoData.filter(
     (element) => element.priority === "LOW" && element.isCompleted === true
   );
@@ -90,17 +87,8 @@ function TodoList() {
 
   function useHandleSearchText(e) {
     dispatch(changeSearchText(e.target.value));
-
-    axios
-      .post(fullTextTodoUrl, {
-        searchText: e.target.value,
-      })
-      .then((response) => {
-        dispatch(getFullTextTodo(response.data.payload));
-      })
-      .catch((error) => {
-        console.error(`Axios Error: ${error}`);
-      });
+    console.log(`searchText = ${e.target.value}`);
+    funcGetFullTextTodo(fullTextTodoUrl, e.target.value, dispatch);
   }
 
   return (

@@ -9,8 +9,7 @@ function Card() {
     const dispatch = useDispatch();
 
     const addTodoUrl =
-        "http://13.233.99.122/src/backend/utils/todo.php?action=ADD_TODO";
-        // "http://localhost:8080?action=ADD_TODO";
+        `${process.env.REACT_APP_SERVER_URL}/todos`;
 
     function changePriority(e, priority) {
         e.preventDefault();

@@ -2,30 +2,27 @@ import funcUpdateTodo from "./funcUpdateTodo.js";
 import funcGetFullTextTodo from "./funcGetFullTextTodo.js";
 
 let itemId = "",
-    finalPriority = "";
-export function drag(event, id) {
-    itemId = id;
-    event.dataTransfer.setData("text/uri-list", event.target.id);
+  finalPriority = "",
+  todo = {};
+export function drag(event, listItem) {
+  todo = listItem;
+  itemId = listItem.id;
+  event.dataTransfer.setData("text/uri-list", event.target.id);
 }
 
 export function allowDrop(event) {
-    event.preventDefault();
+  event.preventDefault();
 }
 
 export function drop(event, priority, searchText, dispatch) {
-    event.preventDefault();
+  event.preventDefault();
 
-    finalPriority = priority;
-    const updateUrl = `http://13.233.99.122/src/backend/utils/todo.php?action=UPDATE_TODO`;
+  finalPriority = priority;
+  const updateUrl = `${process.env.REACT_APP_SERVER_URL}/todos/{id}`;
 
-    funcUpdateTodo(updateUrl, itemId, "priority", finalPriority, dispatch);
+  funcUpdateTodo(updateUrl, itemId, "priority", finalPriority, todo, dispatch);
 
-    const fullTextTodoUrl =
-        "http://13.233.99.122/src/backend/utils/todo.php?action=GET_FULLTEXT_TODO";
+  const fullTextTodoUrl = `${process.env.REACT_APP_SERVER_URL}/todos/search?searchText={searchText}`;
 
-    funcGetFullTextTodo(
-        fullTextTodoUrl,
-        searchText,
-        dispatch,
-    );
+  funcGetFullTextTodo(fullTextTodoUrl, searchText, dispatch);
 }
